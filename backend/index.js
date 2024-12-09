@@ -1,7 +1,6 @@
 import express from 'express';
 import mongoose, { mongo } from 'mongoose';
 import dotenv from 'dotenv'
-import userRoute from './routes/userRoute.js'
 import authRoute from './routes/authRoute.js'
 import blogRoute from './routes/blogRoute.js'
 import cors from 'cors';
@@ -30,7 +29,6 @@ app.listen(4001, ()=>{
     console.log("server is running on port 4001")
 })
 
-app.use('/api/user', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/blog', blogRoute);
 

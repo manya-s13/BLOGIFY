@@ -38,7 +38,6 @@ function Foot() {
             </div>
           </div>
 
-          {/* Contact and Social */}
           <div>
             <Footer.Title title="Connect With Us" />
             <div className="flex flex-col space-y-2">

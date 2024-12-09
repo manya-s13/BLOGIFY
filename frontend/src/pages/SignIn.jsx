@@ -15,13 +15,15 @@ function SignIn() {
       email,  
       password}, { withCredentials: true });
         if (response.status === 200) {
-          alert('Login successful!');
-          navigate('/');
-          window.location.reload();
-        } 
+          const  userId  = response.data.user._id;
+          // alert('Login successful!');
+          navigate(`/verify/${userId}`);
+        } else{
+          alert('Signin failed: Unexpected status code');
+        }
     } catch (error) {
       console.error(error.response ? error.response.data.message : error.message);
-      alert('Signup failed: ' + (error.response ? error.response.data.message : error.message));
+      alert('Signin failed: ' + (error.response ? error.response.data.message : error.message));
     }
   };
 
