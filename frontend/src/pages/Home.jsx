@@ -28,14 +28,17 @@ const App = () => {
       </header>
       
       <main className="container mx-auto px-4 py-4 mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        <h3 className='semibold text-md'>Latest Articles</h3>
+        <h3 className='semibold text-md'>Latest Articles</h3>  
+
+
+        
         {blogs.map((blog) => (
           <div key={blog._id} className="bg-#78716c rounded-lg shadow-md pt-2 overflow-hidden">
             
             <div className="p-4">
               <h2 className="text-lg font-semibold text-gray-800">{blog.title}</h2>
               <p className="text-sm text-gray-600 mt-2">{turncateContent(blog.content)}</p>
-              <p className="text-xs text-gray-500 mt-4">By {blog.author.username}</p>
+           
               <Link
                 to={`/${blog._id}`}
                 className="text-blue-500 mt-4 hover:underline"

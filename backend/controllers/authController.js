@@ -340,4 +340,27 @@ export const checkAuth = async (req, res) => {
       res.status(200).json({ isAuthenticated: false });
     }
   };
+
+export const getSubscriptionStatus = async (req,res) => {
+  try {
+    
+    const token = req.cookies.token;
+    console.log(token)
+    if (!token) {
+      return res.status(200).json({ isAuthenticated: false });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    
+    if (!user) {
+      return res.status(200).json({ isAuthenticated: false });
+    }
+    const subscriptionStatus = user.subscribed;
+    console.log(subscriptionStatus)
+    res.status(200).json({ isSubscribed: subscriptionStatus });
+  } catch (error) { 
+   console.log(error)
+  }
+}
   

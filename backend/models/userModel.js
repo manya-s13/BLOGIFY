@@ -56,6 +56,11 @@ const userSchema = new mongoose.Schema({
     otpAttemptsExpire: {
         type: Date
     },
+    subscribed: {
+        type: Boolean,
+        default: false
+    },
+    
     blogs: [
         {
             type: mongoose.Schema.Types.ObjectId,
