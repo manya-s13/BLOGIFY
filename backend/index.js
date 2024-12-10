@@ -3,6 +3,7 @@ import mongoose, { mongo } from 'mongoose';
 import dotenv from 'dotenv'
 import authRoute from './routes/authRoute.js'
 import blogRoute from './routes/blogRoute.js'
+import analysisRouter from './routes/analysisRoute.js'
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
@@ -31,6 +32,7 @@ app.listen(4001, ()=>{
 
 app.use('/api/auth', authRoute);
 app.use('/api/blog', blogRoute);
+app.use('/api/analysis', analysisRouter);
 
 
 app.use((err, req, res, next) => {

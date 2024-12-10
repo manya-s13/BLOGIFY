@@ -70,6 +70,9 @@ function Header() {
         <Navbar.Link>
           <Link to='/about'>About</Link>
         </Navbar.Link>
+        <Navbar.Link>
+          <Link to='/Admin'>Admin</Link>
+        </Navbar.Link>
        { isAuthenticated &&  (
         <Navbar.Link>
           <Link to='/dashboard'>Dashboard</Link>

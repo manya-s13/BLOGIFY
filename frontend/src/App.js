@@ -9,6 +9,7 @@ import Header from './components/Header';
 import Foot  from './components/Foot';
 import BlogDetail from './pages/BlogDetail';
 import VerifyOtp from './pages/VerifyOtp';
+import Admin from './pages/Admin';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
     <Route path='/dashboard' element={<Dashboard />} />
     <Route path='/:id' element={<BlogDetail />} />
     <Route path='/verify/:id' element={<VerifyOtp />} />
+    <Route path='/Admin' element={<Admin/>} />
    </Routes>
    <Foot />
    </BrowserRouter>

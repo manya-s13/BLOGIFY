@@ -34,6 +34,7 @@ const Dashboard = () => {
       alert("Title and content cannot be empty!");
       return;
     }
+    alert('Published successfully!')
     axios.post("http://localhost:4001/api/blog/create",
         newPost,
         { withCredentials: true }
