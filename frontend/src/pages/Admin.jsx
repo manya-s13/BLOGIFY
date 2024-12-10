@@ -100,7 +100,7 @@ const Admin = () =>{
 <Chart
     options={{
         chart: { id: 'user-publication-status' },
-        labels: userPublished.map((data) => data.category), // Categories: Published & Unpublished
+        labels: userPublished.map((data) => data.category),
         title: {
             text: 'User Publication Status',
             align: 'center',
@@ -109,7 +109,7 @@ const Admin = () =>{
             position: 'bottom',
         },
     }}
-    series={userPublished.map((data) => data.count)} // Counts for each category
+    series={userPublished.map((data) => data.count)} 
     type="pie"
 />
           </div>

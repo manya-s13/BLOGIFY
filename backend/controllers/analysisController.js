@@ -96,13 +96,11 @@ export const blogsbyuser = async(req, res) =>{
 
 export const published = async(req, res) =>{
     try{
-        const usersWithBlogs = await Blog.distinct('author'); // Get unique authors from blogs
+        const usersWithBlogs = await Blog.distinct('author');
         const publishedCount = usersWithBlogs.length;
 
-        // Total users
         const totalUsers = await User.countDocuments();
 
-        // Count of users who haven't published
         const unpublishedCount = totalUsers - publishedCount;
 
         res.json([
