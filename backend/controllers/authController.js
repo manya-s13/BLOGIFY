@@ -116,7 +116,6 @@ try{
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
-  // Validate input
   if (!email || !password || email === '' || password === '') {
       return next(errorHandler(400, 'All fields are important'));
   }
@@ -127,31 +126,26 @@ export const signin = async (req, res, next) => {
           return next(errorHandler(404, 'User not found'));
       }
 
-      // Check if the account is locked
       if (validUser.lockUntil && validUser.lockUntil > Date.now()) {
           return next(errorHandler(400, 'Account is locked. Please try again later.'));
       }
 
-      // Compare passwords
       const isMatch = await validUser.comparePassword(password);
       if (!isMatch) {
-          // Increment login attempts if password is incorrect
+          
           validUser.loginAttempts += 1;
 
-          // Lock the account if max attempts exceeded
           if (validUser.loginAttempts >= process.env.MAX_LOGIN_ATTEMPTS) {
-              validUser.lockUntil = Date.now() + process.env.OTP_LOCK_TIME * 60 * 1000; // Lock account for OTP_LOCK_TIME minutes
+              validUser.lockUntil = Date.now() + process.env.OTP_LOCK_TIME * 60 * 1000; 
           }
 
           await validUser.save();
           return next(errorHandler(400, 'Invalid Password'));
       }
 
-      // Reset failed login attempts on successful login
       validUser.loginAttempts = 0;
       validUser.lockUntil = undefined;
 
-      // Generate OTP for login
       const loginOtp = Math.floor(100000 + Math.random() * 900000);
       const loginOtpExpire = new Date(Date.now() + process.env.LOGIN_OTP_EXPIRE * 60 * 1000); 
       
@@ -166,22 +160,18 @@ export const signin = async (req, res, next) => {
       emailTemplate = emailTemplate.replace('{{PORT}}', process.env.PORT);
       emailTemplate = emailTemplate.replace('{{USER_ID}}', validUser._id.toString());
 
-      // Send OTP email
       await sendEMail({
           email,
           subject,
           html: emailTemplate,
       });
 
-      // Save OTP and expiration time
       validUser.loginOtp = loginOtp;
       validUser.loginOtpExpire = loginOtpExpire;
       await validUser.save();
 
-      // Generate JWT token for session
       const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-      // Send response with cookie containing JWT
       res.status(200).cookie('token', token, {
           httpOnly: true,
           secure: true,
@@ -229,40 +219,35 @@ export const verifyLoginOtp = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Fetch user by ID
+   
     const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the user is locked due to failed attempts
     if (user.loginOtpAttempts >= process.env.MAX_LOGIN_ATTEMPTS) {
       if (user.loginOtpAttemptsExpire > Date.now()) {
         return res.status(400).json({ message: "Too many OTP attempts. Please try again later." });
       } else {
-        // Reset login attempts after lockout period expires
+        
         user.loginOtpAttempts = 0;
         user.loginOtpAttemptsExpire = undefined;
       }
     }
 
-    // Check OTP validity
     if (!otp) {
       return res.status(400).json({ message: "OTP is required" });
     }
 
-    // Check if OTP has expired
     if (new Date() > user.loginOtpExpire) {
       return res.status(400).json({ message: "OTP has expired" });
     }
 
-    // Check if the OTP entered matches the stored one
     if (Number(user.loginOtp )!== Number(otp)) {
-      // Increment OTP attempts
+      
       user.loginOtpAttempts += 1;
 
-      // Set the expiration time for the login attempts
       if (user.loginOtpAttempts >= process.env.MAX_LOGIN_ATTEMPTS) {
         user.loginOtpAttemptsExpire = new Date(Date.now() + process.env.OTP_LOCK_TIME * 60 * 1000); // Lock for OTP_LOCK_TIME minutes
       }
@@ -271,15 +256,13 @@ export const verifyLoginOtp = async (req, res) => {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    // Clear OTP fields on success (optional)
     user.loginOtp = null;
     user.loginOtpExpire = null;
-    user.loginOtpAttempts = 0;  // Reset OTP attempts on success
-    user.loginOtpAttemptsExpire = null;  // Reset lock expiration
+    user.loginOtpAttempts = 0;
+    user.loginOtpAttemptsExpire = null;
     await user.save();
 
-    // Generate a token and send it in response (using your logic)
-    const token = await user.generateToken(); // Assuming `generateToken` method exists
+    const token = await user.generateToken();
 
     const options = {
       expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
