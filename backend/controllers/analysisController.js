@@ -59,3 +59,60 @@ export const getblogs = async(req, res) =>{
     res.status(500).json({ message: "Error fetching blogs by day", error });
   }
 };
+
+export const blogsbyuser = async(req, res) =>{
+    try {
+        const blogsByUser = await Blog.aggregate([
+            {
+                $group: {
+                    _id: "$author",
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "authorDetails"
+                }
+            },
+            {
+                $unwind: "$authorDetails",
+            },
+            {
+                $project: {
+                    count: 1,
+                    authorId: "$_id",
+                    authorDetails: { username: 1 },
+                }
+            }
+        ]);
+        res.json(blogsByUser);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const published = async(req, res) =>{
+    try{
+        const usersWithBlogs = await Blog.distinct('author'); // Get unique authors from blogs
+        const publishedCount = usersWithBlogs.length;
+
+        // Total users
+        const totalUsers = await User.countDocuments();
+
+        // Count of users who haven't published
+        const unpublishedCount = totalUsers - publishedCount;
+
+        res.json([
+            { category: 'Published', count: publishedCount },
+            { category: 'Unpublished', count: unpublishedCount }
+        ]);
+
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching publication status data' });
+
+    }
+}

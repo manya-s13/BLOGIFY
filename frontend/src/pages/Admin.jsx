@@ -5,14 +5,20 @@ import axios from 'axios';
 const Admin = () =>{
     const [userSignups, setUserSignups] = useState([]);
     const [blogPosts, setBlogPosts] = useState([]);
+    const [userBlogs, setUserBlogs] = useState([]);
+    const [userPublished, setUserPublished] = useState([]);
 
     useEffect(()=>{
         const fetchData = async()=>{
             const userData = await axios.get('http://localhost:4001/api/analysis/signups');
             const blogData = await axios.get('http://localhost:4001/api/analysis/getblogs');
+            const blogsuser = await axios.get('http://localhost:4001/api/analysis/blogsbyuser');
+            const userpublished = await axios.get('http://localhost:4001/api/analysis/published');
 
             setUserSignups(userData.data);
             setBlogPosts(blogData.data);
+            setUserBlogs(blogsuser.data);
+            setUserPublished(userpublished.data);
 
         };
         fetchData();
@@ -57,12 +63,55 @@ const Admin = () =>{
   series={[
     {
       name: 'Blogs Published',
-      data: blogPosts.map(data => data.count), // Pass the count data
+      data: blogPosts.map(data => data.count), 
     },
   ]}
   type="line"
 />
-
+<Chart
+  options={{
+    chart: { id: 'blogs-by-user' },
+    xaxis: {
+      categories: userBlogs.map((data) => (data.authorDetails ? data.authorDetails.username : 'Unknown User'))
+      ,
+      title: {
+        text: 'Users',
+      },
+      labels: {
+        rotate: -45,
+        formatter: function (val) {
+          return val;
+        },
+      },
+    },
+    title: {
+      text: 'Blogs Published by Users',
+      align: 'center',
+    },
+  }}
+  series={[
+    {
+      name: 'Blogs Published',
+      data: userBlogs.map((data) => data.count),
+    },
+  ]}
+  type="bar"
+/>
+<Chart
+    options={{
+        chart: { id: 'user-publication-status' },
+        labels: userPublished.map((data) => data.category), // Categories: Published & Unpublished
+        title: {
+            text: 'User Publication Status',
+            align: 'center',
+        },
+        legend: {
+            position: 'bottom',
+        },
+    }}
+    series={userPublished.map((data) => data.count)} // Counts for each category
+    type="pie"
+/>
           </div>
     )
 }
