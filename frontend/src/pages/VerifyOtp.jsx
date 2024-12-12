@@ -6,7 +6,6 @@ const VerifyOtp = () => {
   const [otp, setOtp] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
-  // const [id, setId] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,13 +32,6 @@ const VerifyOtp = () => {
       alert(error.response?.data?.message || 'An error occurred. Please try again.');
     }
   };
-
-  // useEffect(() => {
-  //   if(userId){
-  //     console.log("User: ", userId)
-  //     setId(userId)
-  //   }
-  // }, [userId])
 
   return (
     <div className='pt-4 mt-4 mb-4 pb-4'>

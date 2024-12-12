@@ -70,9 +70,9 @@ function Header() {
     const session = response.data;
     console.log("Session Data:", session);
 
-    // Redirect to Stripe Checkout
+   
     const result = await stripe.redirectToCheckout({
-      sessionId: session.id, // Ensure this is correctly fetched
+      sessionId: session.id, 
     });
 
     if (result.error) {

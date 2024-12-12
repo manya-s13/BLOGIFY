@@ -42,7 +42,7 @@ const paymentController = async (req, res) => {
     success_url: `${process.env.STRIPE_SUCCESS_URL}`,
     cancel_url: `${process.env.STRIPE_CANCEL_URL}`,
     metadata: {
-        userId: decoded.id, // Pass the user ID here
+        userId: decoded.id,
       },
   });
 

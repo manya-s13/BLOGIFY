@@ -27,14 +27,18 @@ const Admin = () =>{
 
     return (
         <div>
-            <div className="text-center mt-4 font-semibold" >Users signed up per month</div>
+            <div className="text-center mt-4 mb-4 font-semibold text-blue-800" >User Analytics</div>
           <Chart
             options={{
               chart: { id: 'user-signups' },
               xaxis: { categories: userSignups.map(data => data.month),
                 title: {
-                    text: 'Months'
-                }
+                    text: 'Months',
+                },
+             },
+             title: {
+             text: 'Users registered per month',
+             align: 'center',
              }
             }}
             series={[{ name: 'User Signups', data: userSignups.map(data => data.count) }]}
@@ -47,12 +51,6 @@ const Admin = () =>{
       categories: blogPosts.map(data => data.date), 
       title: {
         text: 'Dates', 
-      },
-      labels: {
-        rotate: -45, 
-        formatter: function (val) {
-          return val; 
-        },
       },
     },
     title: {
@@ -76,12 +74,6 @@ const Admin = () =>{
       ,
       title: {
         text: 'Users',
-      },
-      labels: {
-        rotate: -45,
-        formatter: function (val) {
-          return val;
-        },
       },
     },
     title: {

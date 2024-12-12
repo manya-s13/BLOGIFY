@@ -18,7 +18,7 @@ function Signup() {
         password,
         email
         });
-        if(response.status===200){
+        if(response.status === 200){
           alert('sign up successful');
           navigate('/signin');
         }
